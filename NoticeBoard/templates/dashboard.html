@@ -1,0 +1,71 @@
+{% extends 'flatpages/index.html' %}
+
+{% block title %}
+Личный кабинет
+{% endblock title %}
+
+{% block content %}
+   <h1>Личный кабинет</h1>
+   <hr>
+   <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <p><label for="date">Дата отклика (не ранее):</label>
+           <input type="date" id="date" name="datetime_created" value="2023-01-01"></p>
+       <input type="submit" value="Найти" />
+   </form>
+   <hr>
+   {% if reactions %}
+       <em>Всего откликов: {{ reactions|length }}</em>
+       <table align="center" style="table-layout: fixed" width="1000">
+           {% for reaction in reactions %}
+               <tr>
+                   <td align="left" width="800" style="word-wrap:break-word;">
+                       <p>{{ reaction.text }}
+                           <br>
+                           <em> Автор {{ reaction.user }} {{ reaction.datetime_created }} на "{{ reaction.notice.title }}"</em>
+                           <hr>
+                       </p>
+                   </td>
+                   <td width="85">
+                       {% if reaction.is_accepted == 0 %}
+                       <form align="left" method="post">
+                          {% csrf_token %}
+                          <input type="text" name="reaction" value="{{ reaction.pk }}" hidden>
+                          <input name="reaction_accept" type="submit" value="Принять" style="background-color:#66FF66"/>
+                       </form>
+                       {% endif %}
+                   </td>
+                   <td>
+                       {% if reaction.is_accepted == 0 %}
+                       <form align="left" method="post">
+                          {% csrf_token %}
+                          <input type="text" name="reaction" value="{{ reaction.pk }}" hidden>
+                          <input name="reaction_delete" type="submit" value="Удалить" style="background-color:#FF8888"/>
+                       </form>
+                       {% endif %}
+                   </td>
+               </tr>
+           {% endfor %}
+       </table>
+   {% else %}
+       <h2>Пока что нет откликов на ваши объявления...</h2>
+   {% endif %}
+
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}

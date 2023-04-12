@@ -1,0 +1,46 @@
+{% extends 'flatpages/index.html' %}
+
+{% block title %}
+Объявления
+{% endblock title %}
+
+{% block content %}
+   <h1>Объявления</h1>
+   <hr>
+   {% if notices %}
+       <em>Всего объявлений: {{ notices|length }}</em>
+       <table align="center" width="800" cols="1">
+           {% for notice in notices %}
+               <tr><td align="left"><a href="{{ notice.pk }}"><h3>{{ notice.title }} </h3></a></td></tr>
+               <tr><td align="left"><em> Категория {{ notice.get_category_display }} </em></td></tr>
+               <tr><td align="left"><em> Автор {{ notice.author }} </em></td></tr>
+               <tr><td align="left"><em> {{ notice.datetime_created }} </em></td></tr>
+               <tr><td><hr></td></tr>
+           {% endfor %}
+       </table>
+   {% else %}
+       <h2>К сожалению, не найдено ни одного объявления...</h2>
+   {% endif %}
+
+    <table align="center" width="800" cols="1">
+        <tr><td><a href="{% url 'notice_create' %}"><input type="submit" value="Добавить объявление"/></a></td></tr>
+    </table>
+
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}

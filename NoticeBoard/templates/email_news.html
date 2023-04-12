@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p> Здравствуй, <strong>{{ username }}</strong>. Мы подготовили список новых объявлений за прошедшую неделю. </p>
+    <tr align="left">
+        <th> Объявление </th>
+        <th> Категория </th>
+    </tr>
+    {% for notice in notices %}
+    <tr align="left">
+        <td width="170"> <a href="board/{{ notice.pk }}">{{ notice.title }}</a></td>
+        <td width="170"> {{ notice.get_category_display }} </td>
+    </tr>
+    {% endfor %}
+</body>
+</html>

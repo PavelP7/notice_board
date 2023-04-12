@@ -1,0 +1,46 @@
+{% extends 'flatpages/index.html' %}
+
+{% load static %}
+
+{% block title %}
+Объявление
+{% endblock title %}
+
+{% block content %}
+   <h1>{{ notice.title }}</h1>
+   <p> <em>Автор: {{ notice.author.username }}</em> <br>
+   <em>Дата публикации: {{ notice.datetime_created|date:'d.m.Y' }}</em> </p>
+   <hr>
+    <table align="center" width="800" style="table-layout: fixed">
+        <tr><td><p align="left">{{ notice.content }}<hr></p></td></tr>
+       {% for reaction in reactions %}
+           <tr>
+               <td align="left" style="word-wrap:break-word;">
+                   <p>{{ reaction.text }}
+                       <br>
+                       <em> Автор {{ reaction.user }} {{ reaction.datetime_created }} </em>
+                   </p>
+               </td>
+           </tr>
+       {% endfor %}
+        {% if notice.author != current_user %}
+        <br>
+        <tr>
+            <td>
+                <script>
+                function showForm() {
+                    document.getElementById("create_reaction").hidden = false;
+                    document.getElementById("link").hidden = true;
+                }
+                </script>
+                <p id="link" align="left" onclick="showForm()"> <input type="submit" value="Оставить отклик"></p>
+                <form id="create_reaction" align="left" method="post" hidden>
+                    {% csrf_token %}
+                    <p><textarea name="reaction_text" form="create_reaction" required cols="100" rows="10"></textarea></p>
+                    <input type="submit" value="Отправить"/>
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+    </table>
+{% endblock content %}

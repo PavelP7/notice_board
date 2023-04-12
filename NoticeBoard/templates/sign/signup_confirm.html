@@ -1,0 +1,12 @@
+{% extends "flatpages/index.html" %}
+
+{% block content %}
+<h2> Подтверждение регистрации в системе</h2>
+<p></p>
+<form action="{% url 'signup_confirm' %}" method="post">
+{% csrf_token %}
+    <p>Вам на почту был отправлен код, введите его в поле ниже для подтверждения:</p>
+    <p><input type="text" name="code" value=""/></p>
+    <input type="submit" value="Подтвердить"/>
+</form>
+{% endblock %}
